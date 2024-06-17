@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { getAllDetails } from '../controllers/controllers.js'
+import { addDetails, deleteDetails, getAllDetails, getDetailsById, updateDetails } from '../controllers/controllers.js'
 
 export const router = Router()
 
@@ -8,3 +8,7 @@ router.get('/', (req, res) => {
 })
 
 router.get('/details', getAllDetails)
+router.get('/details/:id', getDetailsById)
+router.post('/details', addDetails)
+router.put('/details/:id', updateDetails)
+router.delete('/details/:id', deleteDetails)
