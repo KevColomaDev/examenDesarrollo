@@ -1,5 +1,5 @@
-import { models } from '../models/models.js'
-import { validateSchema } from '../schemas/schemas.js'
+import { models } from '../models/users.js'
+import { validateSchema, validateupdateSchema } from '../schemas/schemas.js'
 
 export const getAllDetails = async (req, res) => {
   try {
@@ -31,7 +31,9 @@ export const addDetails = async (req, res) => {
 
 export const updateDetails = async (req, res) => {
   try {
-    await models.updateDetails(req.params.id, req.body)
+    const id = req.params.id
+    const newDataDetails = validateupdateSchema(req.body)
+    await models.updateDetails(id, newDataDetails)
     res.status(200).json({ message: 'Details updated successfully' })
   } catch (error) {
     res.status(500).json({ message: error.message })
