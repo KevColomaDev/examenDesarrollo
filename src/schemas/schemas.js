@@ -1,17 +1,17 @@
 import { z } from 'zod'
 
 const detailsSchema = z.object({
-  sector: z.string(),
-  mainStreet: z.string(),
-  secondStreet: z.string(),
-  city: z.string()
+  tema: z.string(),
+  description: z.string(),
+  direccion: z.string(),
+  solution: z.string().optional()
 })
 
 export const validateSchema = (data) => {
   const isValid = detailsSchema.safeParse(data)
-  if (!isValid.success) {
-    throw new Error('Invalid data')
-  } else {
+  if (isValid.success) {
     return isValid.data
+  } else {
+    throw new Error(isValid.error)
   }
 }

@@ -10,8 +10,7 @@ export const connectDB = async () => {
     console.log('MongoDB connected')
     mongoose.set('strictQuery', true)
     const client = mongoose.connection.getClient()
-
-    return client.db()
+    return client.db('examenDesarrollo')
   } catch (error) {
     console.log(error)
   }
