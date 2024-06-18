@@ -1,4 +1,5 @@
 import { connectDB } from '../database.js'
+import mongoose from 'mongoose'
 
 export const models = {
   async getDetails () {
@@ -16,7 +17,8 @@ export const models = {
     try {
       const db = await connectDB()
       const collection = db.collection('development')
-      const details = await collection.findOne({ id })
+      id = new mongoose.Types.ObjectId(id)
+      const details = await collection.findOne({ _id: id })
       return details
     } catch (error) {
       console.log(error)
@@ -37,7 +39,8 @@ export const models = {
     try {
       const db = await connectDB()
       const collection = db.collection('development')
-      await collection.updateOne({ id }, { $set: details })
+      id = new mongoose.Types.ObjectId(id)
+      await collection.updateOne({ _id: id }, { $set: details })
     } catch (error) {
       console.log(error)
       throw error
@@ -47,7 +50,8 @@ export const models = {
     try {
       const db = await connectDB()
       const collection = db.collection('development')
-      await collection.deleteOne({ id })
+      id = new mongoose.Types.ObjectId(id)
+      await collection.deleteOne({ _id: id })
     } catch (error) {
       console.log(error)
       throw error
