@@ -7,7 +7,7 @@ export const models = {
   async getDetails () {
     try {
       const db = await connectDB()
-      const collection = db.collection('development')
+      const collection = db.collection('Problems')
       const details = await collection.find({}).toArray()
       return details
     } catch (error) {
@@ -18,7 +18,7 @@ export const models = {
   async getDetailsById (id) {
     try {
       const db = await connectDB()
-      const collection = db.collection('development')
+      const collection = db.collection('Problems')
       id = new mongoose.Types.ObjectId(id)
       const details = await collection.findOne({ _id: id })
       return details
@@ -30,7 +30,7 @@ export const models = {
   async addDetails (details) {
     try {
       const db = await connectDB()
-      const collection = db.collection('development')
+      const collection = db.collection('Problems')
       await collection.insertOne(details)
     } catch (error) {
       console.log(error)
@@ -40,7 +40,7 @@ export const models = {
   async updateDetails (id, details) {
     try {
       const db = await connectDB()
-      const collection = db.collection('development')
+      const collection = db.collection('Problems')
       id = new mongoose.Types.ObjectId(id)
       await collection.updateOne({ _id: id }, { $set: details })
     } catch (error) {
@@ -51,7 +51,7 @@ export const models = {
   async deleteDetails (id) {
     try {
       const db = await connectDB()
-      const collection = db.collection('development')
+      const collection = db.collection('Problems')
       id = new mongoose.Types.ObjectId(id)
       await collection.deleteOne({ _id: id })
     } catch (error) {
