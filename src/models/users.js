@@ -1,6 +1,8 @@
-import { connectDB } from '../database.js'
 import mongoose from 'mongoose'
+import { connectDB } from '../database.js'
+import bcrypt from 'bcrypt'
 
+// Logic for CRUD
 export const models = {
   async getDetails () {
     try {
@@ -55,6 +57,44 @@ export const models = {
     } catch (error) {
       console.log(error)
       throw error
+    }
+  },
+  async register (user) {
+    try {
+      const db = await connectDB()
+      const collection = db.collection('Users')
+      await collection.insertOne(user)
+      await collection.createIndex({ user: 1 }, { unique: true })
+    } catch (error) {
+      console.log(error)
+      throw error
+    }
+  },
+  async encryptPassword (password) {
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword = await bcrypt.hash(password, salt)
+    return hashedPassword
+  },
+
+  async comparePassword (password, encryptedPassword) {
+    const result = await bcrypt.compare(password, encryptedPassword)
+    return result
+  },
+
+  async login (userValidate, passwordValidate) {
+    const db = await connectDB()
+    const collection = db.collection('Users')
+    const result = await collection.findOne({ user: userValidate })
+    if (result) {
+      const pass = passwordValidate
+      const validatePassword = await models.comparePassword(pass, result.password)
+      if (validatePassword) {
+        return result
+      } else {
+        return null
+      }
+    } else {
+      return null
     }
   }
 }

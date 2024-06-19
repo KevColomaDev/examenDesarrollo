@@ -1,5 +1,6 @@
 import { z } from 'zod'
 
+// Details
 const detailsSchema = z.object({
   tema: z.string(),
   description: z.string(),
@@ -25,6 +26,38 @@ export const validateSchema = (data) => {
 
 export const validateupdateSchema = (data) => {
   const isValid = detailsupdateSchema.safeParse(data)
+  if (isValid.success) {
+    return isValid.data
+  } else {
+    throw new Error(isValid.error)
+  }
+}
+
+// Users
+const userSchema = z.object({
+  name: z.string().trim(),
+  lastName: z.string().trim(),
+  sector: z.string().trim(),
+  user: z.string().trim(),
+  password: z.string()
+})
+
+export const validateUserSchema = (data) => {
+  const isValid = userSchema.safeParse(data)
+  if (isValid.success) {
+    return isValid.data
+  } else {
+    throw new Error(isValid.error)
+  }
+}
+
+const loginSchema = z.object({
+  user: z.string().trim(),
+  password: z.string()
+})
+
+export const validateLoginSchema = (data) => {
+  const isValid = loginSchema.safeParse(data)
   if (isValid.success) {
     return isValid.data
   } else {
