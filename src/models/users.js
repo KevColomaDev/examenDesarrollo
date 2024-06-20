@@ -32,6 +32,7 @@ export const models = {
       const db = await connectDB()
       const collection = db.collection('Problems')
       await collection.insertOne(details)
+      return details
     } catch (error) {
       console.log(error)
       throw error
