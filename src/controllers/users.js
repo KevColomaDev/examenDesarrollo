@@ -55,10 +55,10 @@ export const deleteDetails = async (req, res) => {
 export const register = async (req, res) => {
   try {
     const newUser = validateUserSchema(req.body)
-    console.log(newUser.password)
     newUser.password = await models.encryptPassword(newUser.password)
     console.log(newUser.password)
     const result = await models.register(newUser)
+    console.log(result)
     const { password, ...others } = result
     res.status(201).json({ message: 'User created successfully', result: others })
   } catch (error) {
@@ -99,8 +99,8 @@ export const login = async (req, res) => {
     const token = jwt.sign({ result }, process.env.TOKEN_SECRET, {
       expiresIn: '1d'
     })
-    const { _id, password, ...others } = result
     if (result) {
+      const { _id, password, ...others } = result
       res.cookie('access_token_user', token, {
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000

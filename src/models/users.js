@@ -65,6 +65,7 @@ export const models = {
       const collection = db.collection('Users')
       await collection.insertOne(user)
       await collection.createIndex({ user: 1 }, { unique: true })
+      return user
     } catch (error) {
       console.log(error)
       throw error

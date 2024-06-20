@@ -58,7 +58,8 @@ export const register = async (req, res) => {
     const newUser = validateUserSchema(req.body)
     newUser.password = await modelsUser.encryptPassword(newUser.password)
     const result = await models.register(newUser)
-    res.status(201).json({ message: 'Admin created successfully', result })
+    const { _id, password, ...others } = result
+    res.status(201).json({ message: 'Admin created successfully', result: others })
   } catch (error) {
     res.status(500).json({ message: error.message })
   }
@@ -71,9 +72,8 @@ export const loginAdmin = async (req, res) => {
     const token = jwt.sign({ result }, process.env.TOKEN_SECRET, {
       expiresIn: '1d'
     })
-    const { _id, password, ...others } = result
-    console.log(result)
     if (result) {
+      const { _id, password, ...others } = result
       res.cookie('access_token_admin', token, {
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000
