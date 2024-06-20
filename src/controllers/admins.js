@@ -1,6 +1,9 @@
+import jwt from 'jsonwebtoken'
 import { modelsAdmin as models } from '../models/admins.js'
 import { validateLoginSchema, validateSchema, validateUserSchema, validateupdateSchema } from '../schemas/schemas.js'
 import { models as modelsUser } from '../models/users.js'
+import { config } from 'dotenv'
+config()
 
 export const getAllDetails = async (req, res) => {
   try {
@@ -53,22 +56,29 @@ export const deleteDetails = async (req, res) => {
 export const register = async (req, res) => {
   try {
     const newUser = validateUserSchema(req.body)
-    console.log(newUser.password)
     newUser.password = await modelsUser.encryptPassword(newUser.password)
-    console.log(newUser.password)
     const result = await models.register(newUser)
-    res.status(201).json({ message: 'User created successfully', result })
+    res.status(201).json({ message: 'Admin created successfully', result })
   } catch (error) {
     res.status(500).json({ message: error.message })
   }
 }
 
-export const login = async (req, res) => {
+export const loginAdmin = async (req, res) => {
   try {
     const userLogin = validateLoginSchema(req.body)
-    const result = await models.login(userLogin.user, userLogin.password)
+    const result = await models.loginAdmin(userLogin.user, userLogin.password)
+    const token = jwt.sign({ result }, process.env.TOKEN_SECRET, {
+      expiresIn: '1d'
+    })
+    const { _id, password, ...others } = result
+    console.log(result)
     if (result) {
-      res.status(200).json({ message: 'Login successful', result })
+      res.cookie('access_token_admin', token, {
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000
+      })
+      res.status(200).json({ message: 'Login Admin successful', result: others })
     } else {
       res.status(401).json({ message: 'User or password invalid' })
     }

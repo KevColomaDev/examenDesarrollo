@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 import { connectDB } from '../database.js'
-import { models } from '../models/users.js'
+import { models } from './users.js'
 
 // Logic for CRUD
 export const modelsAdmin = {
@@ -15,7 +15,7 @@ export const modelsAdmin = {
       throw error
     }
   },
-  async login (userValidate, passwordValidate) {
+  async loginAdmin (userValidate, passwordValidate) {
     const db = await connectDB()
     const collection = db.collection('Admins')
     const result = await collection.findOne({ user: userValidate })

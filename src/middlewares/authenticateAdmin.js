@@ -3,14 +3,15 @@ import { config } from 'dotenv'
 
 config()
 
-export const userLoginMiddleware = async (req, res, next) => {
-  const token = req.cookies.access_token_user
+export const adminLoginMiddleware = async (req, res, next) => {
+  const token = req.cookies.access_token_admin
+  console.log(token)
   if (!token) {
-    return res.status(401).json({ message: 'No token provided' })
+    return res.status(401).json({ message: 'No admin token provided' })
   }
   try {
     const decoded = jwt.verify(token, process.env.TOKEN_SECRET)
-    req.user = decoded
+    req.admin = decoded
     next()
   } catch (error) {
     res.status(401).json({ message: 'Invalid token' })
