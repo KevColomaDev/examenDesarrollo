@@ -1,5 +1,8 @@
 import { models } from '../models/users.js'
 import { validateLoginSchema, validateSchema, validateUserSchema, validateupdateSchema } from '../schemas/schemas.js'
+import jwt from 'jsonwebtoken'
+import { config } from 'dotenv'
+config()
 
 export const getAllDetails = async (req, res) => {
   try {
@@ -93,8 +96,14 @@ export const login = async (req, res) => {
   try {
     const userLogin = validateLoginSchema(req.body)
     const result = await models.login(userLogin.user, userLogin.password)
+    const token = jwt.sign({ result }, process.env.TOKEN_SECRET, {
+      expiresIn: '1d'
+    })
     const { _id, password, ...others } = result
     if (result) {
+      res.cookie('access_token', token, {
+        httpOnly: true
+      })
       res.status(200).json({ message: 'Login successful', result: others })
     } else {
       res.status(401).json({ message: 'User or password invalid' })
